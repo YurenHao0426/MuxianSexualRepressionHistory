@@ -10,11 +10,19 @@ BASE_URL   = "https://api.aicu.cc/api/v3/search/getreply"
 UID        = int(os.getenv("BILIBILI_UID", "1"))          # 改成目标 UID，或在 Actions secrets 中设
 EXCEL_FILE = pathlib.Path("replies.xlsx")
 MAX_P_PAGE = 500
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/123.0 Safari/537.36"
+    ),
+    # "Referer": "https://www.aicu.cc/",   # 如果仍 403 就把这行放开
+}
 
 def fetch_all(uid: int):
     replies, pn = [], 1
     while True:
-        r = requests.get(BASE_URL, params=dict(uid=uid, pn=pn, ps=MAX_P_PAGE, mode=0), timeout=15)
+        r = requests.get(BASE_URL, params=dict(uid=uid, pn=pn, ps=MAX_P_PAGE, mode=0), headers=HEADERS, timeout=15)
         r.raise_for_status()
         data = r.json()
         if data.get("code") != 0:
