@@ -1,0 +1,3 @@
+pandas
+openpyxl       # 写 xlsx
+requests
